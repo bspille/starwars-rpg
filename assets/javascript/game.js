@@ -2,10 +2,11 @@
 game = {
 	field: $("#mapArea"),
 
-	zones: ["selection", "enemy", "combat", "graveyard",
-			"attacker", "defender"],
+	zones: ["selection", "enemy", "combat", "graveyard"],
 
 	characters: ["char_1", "char_2", "char_3", "char_4"],
+
+	charaImage: [],
 
 	buttons: ["start", "attack"],
 
@@ -35,6 +36,11 @@ game = {
 			
 				for (var i = 0; i < game.characters.length; i++) {
 					var newAvatar = $("<button>");
+					var newChara = $("<img>");
+					newChara.attr("class", "chara");
+					newChara.attr("alt", game.characters[i]);
+					newChara.attr("src", "asset/images/" + game.charaImage[i]);
+					newAvatar.append(newChara);
 					newAvatar.attr("class", "selBtn");
 					newAvatar.attr("name", game.characters[i]);
 					newDiv.append(newAvatar);
@@ -50,12 +56,18 @@ game = {
 					var n = game.characters.indexOf(game.player);
 					game.enemy = game.characters
 					game.enemy.splice(n,1);
-					console.log(game.enemy);
-					game.genmap()
+					game.genmap();
 				},
 
 	genmap: function() {
 				game.field.empty();
+				for (var i = 0; i < game.zones.length; i++) {
+					var newDiv = $("<div>");
+					newDiv.attr("id", game.zones[i]);
+					newDiv.attr("class", "quadrant");
+					game.field.append(newDiv);
+				}
+
 	}
 
 	// remaining characters are set as enemies and moved to zone
