@@ -23,6 +23,9 @@ game = {
 				var newBtn = $("<button>" + this.buttons[0] + "</button>");
 				newBtn.attr("id", "startBtn");
 				this.field.append(newBtn);
+				$("#startBtn").on("click", function() {
+					game.start();
+				});
 			},
 
 	start: 	function() {
@@ -31,21 +34,30 @@ game = {
 				newDiv.attr("id", game.zones[0]);
 			
 				for (var i = 0; i < game.characters.length; i++) {
-					var newAvatar = $("<div>");
-					var newChara = $("<img>");
-					newAvatar.addClass("avatar");
-					newAvatar.attr("id", "chara_" + [i]);
-					newAvatar.attr("attack", game.atk[i]);
-					newAvatar.attr("counter-attack", game.cntAtk[i]);
-					newAvatar.attr("hit-points", game.HP[i]);
-					newChara.addClass("character");
-					newChara.attr("alt", game.characters[i]);
-					newAvatar.append(newChara);
-					game.field.append(newAvatar);
+					var newAvatar = $("<button>");
+					newAvatar.attr("class", "selBtn");
+					newAvatar.attr("name", game.characters[i]);
+					newDiv.append(newAvatar);
 				};
 				game.field.append(newDiv);
-			}
-	// player selection function on click
+				$(".selBtn").on("click", function() {
+					game.player	= ($(this).attr("name"));
+					game.setparty();
+				});
+			},
+
+	setparty: 	function () {
+					var n = game.characters.indexOf(game.player);
+					game.enemy = game.characters
+					game.enemy.splice(n,1);
+					console.log(game.enemy);
+					game.genmap()
+				},
+
+	genmap: function() {
+				game.field.empty();
+	}
+
 	// remaining characters are set as enemies and moved to zone
 	// player chooses the order to fight one at a time
 	// enemies are move to a defender area for combat and grave yard when killed
@@ -59,9 +71,6 @@ game = {
 
 // event functions go here
 $(document).ready(function() {
-	game.load();
-	$("#startBtn").on("click", function() {
-		game.start();
-	});
 
+	game.load();
 });
