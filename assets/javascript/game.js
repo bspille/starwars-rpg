@@ -18,7 +18,7 @@ game = {
 
 	atk: [],
 
-	cntAtk: [],
+	cntrAtk: [],
 	
 	load: 	function() {
 				var newBtn = $("<button>" + this.buttons[0] + "</button>");
@@ -66,11 +66,29 @@ game = {
 					newDiv.attr("id", game.zones[i]);
 					newDiv.attr("class", "quadrant");
 					game.field.append(newDiv);
-				}
+				};
+				game.fieldplyr();
+			},
 
-	}
+	fieldplyr: 	function() {
+					var newDiv = $("<div>");
+					var newAvatar = $("<img>");
+					newAvatar.attr("alt", game.player);
+					newDiv.append(newAvatar);
+					newDiv.addClass("avatar");
+					newDiv.attr("id", game.player);
+					newDiv.attr("atk", "");
+					newDiv.attr("cntrAtk", "");
+					newDiv.attr("HP", "");
+					$("#selection").append(newDiv);
+									
+	}	
 
-	// remaining characters are set as enemies and moved to zone
+	// field the players ??
+	// link image and random attributes
+	// display hp
+	// random placement of atk cntatk and hp
+	// danger indicator
 	// player chooses the order to fight one at a time
 	// enemies are move to a defender area for combat and grave yard when killed
 	// HP displayed on bottom of the picture
