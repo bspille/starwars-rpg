@@ -35,15 +35,15 @@ game = {
 				newDiv.attr("id", game.zones[0]);
 			
 				for (var i = 0; i < game.characters.length; i++) {
-					var newAvatar = $("<button>");
-					var newChara = $("<img>");
-					newChara.attr("class", "chara");
-					newChara.attr("alt", game.characters[i]);
-					newChara.attr("src", "asset/images/" + game.charaImage[i]);
-					newAvatar.append(newChara);
-					newAvatar.attr("class", "selBtn");
-					newAvatar.attr("name", game.characters[i]);
-					newDiv.append(newAvatar);
+					var newBtn = $("<button>");
+					var newImg = $("<img>");
+					newImg.attr("class", "chara");
+					newImg.attr("alt", game.characters[i]);
+					newImg.attr("src", "asset/images/" + game.charaImage[i]);
+					newBtn.append(newImg);
+					newBtn.attr("class", "selBtn");
+					newBtn.attr("name", game.characters[i]);
+					newDiv.append(newBtn);
 				};
 				game.field.append(newDiv);
 				$(".selBtn").on("click", function() {
@@ -72,19 +72,34 @@ game = {
 
 	fieldplyr: 	function() {
 					var newDiv = $("<div>");
-					var newAvatar = $("<img>");
-					newAvatar.attr("alt", game.player);
-					newDiv.append(newAvatar);
+					var newImg = $("<img>");
+					newImg.attr("alt", game.player);
+					newDiv.append(newImg);
 					newDiv.addClass("avatar");
 					newDiv.attr("id", game.player);
 					newDiv.attr("atk", "");
 					newDiv.attr("cntrAtk", "");
 					newDiv.attr("HP", "");
 					$("#selection").append(newDiv);
-									
-	}	
+					game.fieldenemy();									
+				},
 
-	// field the players ??
+	fieldenemy: function() {
+					for (i = 0; i < game.enemy.length; i++) {
+						var newBtn = $("<button>");
+						var newImg = $("<img>");
+						newImg.attr("alt", game.enemy[i]);
+						newBtn.append(newImg);
+						newBtn.addClass("avatar");
+						newBtn.attr("id", game.enemy[i]);
+						newBtn.attr("atk", "");
+						newBtn.attr("cntrAtk", "");
+						newBtn.attr("HP", "");
+						$("#enemy").append(newBtn);
+					}
+				}
+
+
 	// link image and random attributes
 	// display hp
 	// random placement of atk cntatk and hp
