@@ -5,7 +5,7 @@ game = {
 	zones: ["selection", "enemy", "combat", "graveyard"],
 
 	characters: ["char_1", "char_2", "char_3", "char_4"],
-	enemy: ["char_1", "char_2", "char_3", "char_4"],
+	enemy: [],
 
 	charaImage: [],
 
@@ -16,40 +16,55 @@ game = {
 
 
 	HP: ["100", "110", "120", "130"],
-	hpStat: [],
+	hStat: [],
 
 	atk: ["6", "8", "10", "12"],
-	atkStat: [],
+	aStat: [],
 
 	cntrAtk: ["7", "9", "11", "13"],
-	cntrAtkStat: [],	
+	cStat: [],
 
 	load: 	function() {
 				var newBtn = $("<button>" + game.buttons[0] + "</button>");
 				newBtn.attr("id", "startBtn");
 				game.field.append(newBtn);
-				$("#startBtn").on("click", function() {
-					game.start();
-				});
+				for (var i = 0; i < game.characters.length; i++) {
+					game.enemy.push(game.characters[i]);
+				};
+				for (var i = 0; i < game.HP.length; i++) {
+					game.hStat.push(game.HP[i]);
+				};
+				for (var i = 0; i < game.atk.length; i++) {
+					game.aStat.push(game.atk[i]);
+				}
+				for (var i = 0; i < game.cntrAtk.length; i++) {
+					game.cStat.push(game.cntrAtk[i]);
+				}
+				game.start();
+			
 			},
 
 	start: 	function() {
-				game.field.empty();
-				var newDiv = $("<div>");
-				newDiv.attr("id", game.zones[0]);
-				for (var i = 0; i < game.characters.length; i++) {
-					var newBtn = $("<button>");
-					var newImg = $("<img>");
-					newImg.attr("class", "chara");
-					newImg.attr("alt", game.characters[i]);
-					// newImg.attr("src", "asset/images/" + game.charaImage[i]);
-					newBtn.append(newImg);
-					newBtn.attr("class", "selBtn");
-					newBtn.val(game.characters[i]);
-					newDiv.append(newBtn);				
-				};							
-				game.field.append(newDiv);
-				game.setparty();
+				$("#startBtn").on("click", function() {
+					game.field.empty();
+					var newDiv = $("<div>");
+					newDiv.attr("id", game.zones[0]);
+					for (var i = 0; i < game.characters.length; i++) {
+						var newBtn = $("<button>");
+						var newImg = $("<img>");
+						newImg.attr("class", "chara");
+						newImg.attr("alt", game.characters[i]);
+						// newImg.attr("src", "asset/images/" + game.charaImage[i]);
+						newBtn.append(newImg);
+						newBtn.attr("class", "selBtn");
+						newBtn.val(game.characters[i]);
+						newDiv.append(newBtn);				
+					};							
+					game.field.append(newDiv);
+					game.setparty();
+
+				});
+				// game.setparty();
 			},
 
 	setparty: 	function() {				
@@ -57,7 +72,8 @@ game = {
 						game.player	= ($(this).val());
 						var n = game.enemy.indexOf(game.player);
 						game.enemy.splice(n,1);							
-						game.genmap();						
+						game.genmap();
+					
 					});
 				},
 
@@ -84,11 +100,12 @@ game = {
 					newDiv.addClass("avatar");
 					newDiv.attr("id", game.player);
 					$("#selection").append(newDiv);
-					
+
 					game.fieldenemy();									
 				},
 
 	fieldenemy: function() {
+
 					for (i = 0; i < game.enemy.length; i++) {
 						var newBtn = $("<button>");
 						var newImg = $("<img>");
@@ -106,33 +123,33 @@ game = {
 				},
 
 	genStats: 	function() {
-					game.hpStat = game.HP;
-					game.atkStat = game.atk;
-					game.cntrAtkStat = game.cntrAtk;
 
 					for (var i = 0; i < game.characters.length; i++) {
 						var apply = $("#" + game.characters[i]);
 				
-						var hpl = game.hpStat.length - 1;
+						var hpl = game.hStat.length - 1;
 						var rh = (Math.round(Math.random() * hpl));
-						apply.attr("HP", game.HP[rh]);
-						console.log("rh "+ rh);
-						game.hpStat.splice(rh,1);
+						apply.attr("HP", game.hStat[rh]);
+						game.hStat.splice(rh,1);
+
 						
-						var atkl = game.atkStat.length - 1;						
+						var atkl = game.aStat.length - 1;						
 						var ra = (Math.round(Math.random() * atkl));
-						console.log("ra " + ra);
-						apply.attr("Atk", game.atk[ra]);
-						game.atkStat.splice(ra,1);
+						apply.attr("Atk", game.aStat[ra]);
+						game.aStat.splice(ra,1);
+
 				
-						var cntrAtkl = game.cntrAtkStat.length - 1;						
+						var cntrAtkl = game.cStat.length - 1;						
 						var rc = (Math.round(Math.random() * cntrAtkl));
-						console.log("rc " + rc);
-						apply.attr("cntrAtk", game.cntrAtk[rc]);
-						game.cntrAtkStat.splice(rc,1);
+						apply.attr("cntrAtk", game.cStat[rc]);
+						game.cStat.splice(rc,1);
+				console.log("chara " + game.characters);
+				console.log("enemy " + game.enemy);
+				console.log(game.HP);
+
 					}
 				},
-	
+
 	// player chooses the order to fight one at a time
 	// enemies are move to a defender area for combat and grave yard when killed
 	// HP displayed on bottom of the picture
