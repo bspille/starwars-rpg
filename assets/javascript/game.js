@@ -114,7 +114,7 @@ game = {
 						newImg.attr("id", "image_" + game.characters.indexOf(game.enemy[i]));
 						
 						newBtn.append(newImg);
-						newBtn.addClass("avatar");
+						newBtn.addClass("avatar defender");
 						newBtn.attr("id", game.enemy[i]);
 						
 						$("#enemy").append(newBtn);
@@ -143,13 +143,21 @@ game = {
 						var rc = (Math.round(Math.random() * cntrAtkl));
 						apply.attr("cntrAtk", game.cStat[rc]);
 						game.cStat.splice(rc,1);
-				console.log("chara " + game.characters);
-				console.log("enemy " + game.enemy);
-				console.log(game.HP);
 
 					}
+					game.cloneIn();
 				},
 
+	cloneIn: 	function() {
+					$(".defender").on("click", function() {
+						var opon = ($(this).attr("id"))
+						console.log(opon);
+						$(this).clone().appendTo("#combat");
+						$("#enemy").children('#' + opon).remove();
+					});
+				}
+	// attack button locked when no opponent is in the combat zone
+	// enemy moves to the combat zone on click
 	// player chooses the order to fight one at a time
 	// enemies are move to a defender area for combat and grave yard when killed
 	// HP displayed on bottom of the picture
