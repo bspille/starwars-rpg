@@ -2,6 +2,8 @@
 game = {
 	field: $("#mapArea"),
 
+	locked: false,
+
 	zones: ["selection", "enemy", "combat", "graveyard"],
 
 	characters: ["char_1", "char_2", "char_3", "char_4"],
@@ -73,7 +75,6 @@ game = {
 						var n = game.enemy.indexOf(game.player);
 						game.enemy.splice(n,1);							
 						game.genmap();
-					
 					});
 				},
 
@@ -97,7 +98,7 @@ game = {
 					newImg.attr("id", game.characters.indexOf(game.player));
 					
 					newDiv.append(newImg);
-					newDiv.addClass("avatar");
+					newDiv.attr("role","player");
 					newDiv.attr("id", game.player);
 					$("#selection").append(newDiv);
 
@@ -114,7 +115,7 @@ game = {
 						newImg.attr("id", "image_" + game.characters.indexOf(game.enemy[i]));
 						
 						newBtn.append(newImg);
-						newBtn.addClass("avatar defender");
+						newBtn.addClass("avatar enemyParty");
 						newBtn.attr("id", game.enemy[i]);
 						
 						$("#enemy").append(newBtn);
@@ -144,28 +145,61 @@ game = {
 						apply.attr("cntrAtk", game.cStat[rc]);
 						game.cStat.splice(rc,1);
 
+
 					}
+				
 					game.cloneIn();
 				},
 
 	cloneIn: 	function() {
-					$(".defender").on("click", function() {
-						var opon = ($(this).attr("id"))
-						console.log(opon);
-						$(this).clone().appendTo("#combat");
-						$("#enemy").children('#' + opon).remove();
+					
+					$(".enemyParty").on("click", function() {
+						var opon = ($(this).attr("id"));
+						if (!game.locked) {
+							$(this).attr("role","defender")
+							$(this).clone().appendTo("#combat");
+							$("#enemy").children('#' + opon).remove();
+							game.locked = true;
+							game.combat();
+						};
+
 					});
+				},
+
+	combat: 	function() {
+					var newBtn = $("<button>");
+					newBtn.text("Attack");
+					newBtn.addClass("attack");
+					$("#selection").append(newBtn);
+					var baseAtk = parseInt($("[role=player]").attr("atk"));
+					var pBaseAtk = parseInt($("[role=player]").attr("atk"));
+					// pDamage.push();
+					var pHealth = parseInt($("[role=player]").attr("hp"));
+					// pHealth.push();
+					var eCounter = parseInt($("[role=defender]").attr("cntratk"));
+					// eDamage.push();
+					var eHealth = parseInt($("[role=defender").attr("hp"));
+					// eHealth.push();
+					$(".attack").on("click", function() {
+						eHealth = eHealth - pBaseAtk;
+						$("[role=defender]").attr("hp", eHealth);
+						console.log(eHealth);
+						pBaseAtk = pBaseAtk + baseAtk;
+						$("[role=player]").attr("atk", pBaseAtk);
+						pHealth = pHealth - eCounter;
+						$("[role=player").attr("hp", pHealth);
+						console.log(pHealth);
+					})
 				}
-	// attack button locked when no opponent is in the combat zone
-	// enemy moves to the combat zone on click
-	// player chooses the order to fight one at a time
-	// enemies are move to a defender area for combat and grave yard when killed
+
+	// writeStat function 
+
+	// enemies are move to grave yard when killed
 	// HP displayed on bottom of the picture
 	// attacks reduce points enemies auto counter
 	// win condition defeat all or lose
 	// each player attack increases attack by base atk counters base only
 	// HP atk and cntatk sets must differ for each character
-	// players must be able to win or lose and selection must not depend on the strongest character
 	// display images
 	// display hp
 }
