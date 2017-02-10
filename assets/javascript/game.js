@@ -158,7 +158,8 @@ game = {
 					$(".enemyParty").on("click", function() {
 						var opon = ($(this).attr("id"));
 						if (!game.locked) {
-							$(this).attr("role","defender")
+							$("[role=defender]").attr("role", "defeated");
+							$(this).attr("role","defender");
 							$(this).clone().appendTo("#combat");
 							$("#enemy").children('#' + opon).remove();
 							game.locked = true;
@@ -190,7 +191,7 @@ game = {
 						pHealth = pHealth - eCounter;
 						$("[role=player]").attr("hp", pHealth);
 						game.rewrite();
-					})
+					});
 				},
 // rewrites the stats that change
 	rewrite: 	function() {
@@ -202,11 +203,19 @@ game = {
 				player.children(".displyatk").text("ATK " + paStat);
 				var phStat = player.attr("hp");
 				player.children(".displayhp").text("HP " + phStat);
+				game.defeated(defender, phStat, dhStat);
+			},
 
-				console.log(dhStat);
-				console.log(paStat);
-				console.log(phStat);
+	defeated: 	function(defender, phStat, dhStat) {
+					if (dhStat <= 0) {
+						defender.clone().appendTo("#graveyard");
+						// defender.attr("role", "defeated");
+						$("#selection").children(".attack").remove();
+						$("#combat").empty();
+						game.locked = false;
+					};
 	}
+
 
 	//set conditions
 	// enemies are move to grave yard when killed and enemy selction unlocks
