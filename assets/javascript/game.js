@@ -25,7 +25,7 @@ game = {
 
 	cntrAtk: ["7", "9", "11", "13"],
 	cStat: [],
-
+// sets the stage to begining values can be used to reload the game without reloading the page
 	load: 	function() {
 				var newBtn = $("<button>" + game.buttons[0] + "</button>");
 				newBtn.attr("id", "startBtn");
@@ -45,7 +45,7 @@ game = {
 				game.start();
 			
 			},
-
+// start button function that creates the character selection
 	start: 	function() {
 				$("#startBtn").on("click", function() {
 					game.field.empty();
@@ -68,7 +68,7 @@ game = {
 				});
 				// game.setparty();
 			},
-
+// selection button function that stores selection results
 	setparty: 	function() {				
 					$(".selBtn").on("click", function() {
 						game.player	= ($(this).val());
@@ -77,7 +77,7 @@ game = {
 						game.genmap();
 					});
 				},
-
+// creates the divs that act at the key zones in the game
 	genmap: function() {
 				game.field.empty();
 				for (var i = 0; i < game.zones.length; i++) {
@@ -89,7 +89,7 @@ game = {
 				};
 				game.fieldplyr();
 			},
-
+// sets the player in selection zone on the field
 	fieldplyr: 	function() {
 					var newDiv = $("<div>");
 					var newImg = $("<img>");
@@ -104,7 +104,7 @@ game = {
 
 					game.fieldenemy();									
 				},
-
+// sets the enemies in the enemy zone for selection
 	fieldenemy: function() {
 
 					for (i = 0; i < game.enemy.length; i++) {
@@ -122,35 +122,37 @@ game = {
 					}
 					game.genStats();
 				},
-
+// applies randomly selected stats from the stat array's with no repeats and writes initial values
 	genStats: 	function() {
 
 					for (var i = 0; i < game.characters.length; i++) {
 						var apply = $("#" + game.characters[i]);
-				
+						
 						var hpl = game.hStat.length - 1;
 						var rh = (Math.round(Math.random() * hpl));
 						apply.attr("HP", game.hStat[rh]);
+						apply.append("<p class='displayhp'>" + "HP " + game.hStat[rh] + "</p>");
 						game.hStat.splice(rh,1);
 
 						
 						var atkl = game.aStat.length - 1;						
 						var ra = (Math.round(Math.random() * atkl));
 						apply.attr("Atk", game.aStat[ra]);
+						apply.append("<p class='displayatk'>" + "ATK " + game.aStat[ra] + "</p>");
 						game.aStat.splice(ra,1);
 
 				
 						var cntrAtkl = game.cStat.length - 1;						
 						var rc = (Math.round(Math.random() * cntrAtkl));
 						apply.attr("cntrAtk", game.cStat[rc]);
+						apply.append("<p class='displaycntr'>" + "CNTR " + game.cStat[rc] + "</p>");
 						game.cStat.splice(rc,1);
-
 
 					}
 				
 					game.cloneIn();
 				},
-
+// moves the selcted enemy to the combat zone and triggers locked
 	cloneIn: 	function() {
 					
 					$(".enemyParty").on("click", function() {
@@ -165,7 +167,7 @@ game = {
 
 					});
 				},
-
+// generates a attack button and performs the combat actions
 	combat: 	function() {
 					var newBtn = $("<button>");
 					newBtn.text("Attack");
@@ -183,25 +185,33 @@ game = {
 					$(".attack").on("click", function() {
 						eHealth = eHealth - pBaseAtk;
 						$("[role=defender]").attr("hp", eHealth);
-						console.log(eHealth);
 						pBaseAtk = pBaseAtk + baseAtk;
 						$("[role=player]").attr("atk", pBaseAtk);
 						pHealth = pHealth - eCounter;
-						$("[role=player").attr("hp", pHealth);
-						console.log(pHealth);
+						$("[role=player]").attr("hp", pHealth);
+						game.rewrite();
 					})
-				}
+				},
+// rewrites the stats that change
+	rewrite: 	function() {
+				var defender = $("[role=defender]");
+				var player = $("[role=player");
+				var dhStat = defender.attr("hp");
+				defender.children(".displayhp").text("HP " + dhStat);
+				var paStat = player.attr("atk");
+				player.children(".displyatk").text("ATK " + paStat);
+				var phStat = player.attr("hp");
+				player.children(".displayhp").text("HP " + phStat);
 
-	// writeStat function 
+				console.log(dhStat);
+				console.log(paStat);
+				console.log(phStat);
+	}
 
-	// enemies are move to grave yard when killed
-	// HP displayed on bottom of the picture
-	// attacks reduce points enemies auto counter
+	//set conditions
+	// enemies are move to grave yard when killed and enemy selction unlocks
 	// win condition defeat all or lose
-	// each player attack increases attack by base atk counters base only
-	// HP atk and cntatk sets must differ for each character
 	// display images
-	// display hp
 }
 
 // event functions go here
