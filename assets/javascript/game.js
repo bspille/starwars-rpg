@@ -4,7 +4,7 @@ game = {
 
 	locked: false,
 
-	zones: ["selection", "enemy", "combat", "graveyard"],
+	zones: ["selection", "combat", "enemy", "graveyard"],
 
 	characters: ["char_1", "char_2", "char_3", "char_4"],
 	enemy: [],
@@ -14,19 +14,28 @@ game = {
 	buttons: ["start", "attack"],
 
 	player: [],
-
-
+	baseAtk: [],
 
 	HP: ["100", "110", "120", "130"],
 	hStat: [],
 
-	atk: ["6", "8", "10", "12"],
+	atk: ["8", "9", "10", "12"],
 	aStat: [],
 
-	cntrAtk: ["7", "9", "11", "13"],
+	cntrAtk: ["7", "11", "14", "16"],
 	cStat: [],
 // sets the stage to begining values can be used to reload the game without reloading the page
 	load: 	function() {
+				// reset values
+				game.enemy = [];
+				game.cStat = [];
+				game.aStat = [];
+				game.hStat = [];
+				game.player = [];
+				game.baseAtk = [];
+				game.locked = false;
+
+				// generates the start button and generates clone values
 				var newBtn = $("<button>" + game.buttons[0] + "</button>");
 				newBtn.attr("id", "startBtn");
 				game.field.append(newBtn);
@@ -42,10 +51,11 @@ game = {
 				for (var i = 0; i < game.cntrAtk.length; i++) {
 					game.cStat.push(game.cntrAtk[i]);
 				}
+
 				game.start();
 			
 			},
-// start button function that creates the character selection
+// start button function that creates the character selection buttons
 	start: 	function() {
 				$("#startBtn").on("click", function() {
 					game.field.empty();
@@ -66,7 +76,6 @@ game = {
 					game.setparty();
 
 				});
-				// game.setparty();
 			},
 // selection button function that stores selection results
 	setparty: 	function() {				
@@ -98,6 +107,7 @@ game = {
 					newImg.attr("id", game.characters.indexOf(game.player));
 					
 					newDiv.append(newImg);
+					newDiv.addClass("avatar")
 					newDiv.attr("role","player");
 					newDiv.attr("id", game.player);
 					$("#selection").append(newDiv);
@@ -115,7 +125,8 @@ game = {
 						newImg.attr("id", "image_" + game.characters.indexOf(game.enemy[i]));
 						
 						newBtn.append(newImg);
-						newBtn.addClass("avatar enemyParty");
+						newBtn.attr("role", "enemies")
+						newBtn.addClass("avatar");
 						newBtn.attr("id", game.enemy[i]);
 						
 						$("#enemy").append(newBtn);
@@ -127,21 +138,21 @@ game = {
 
 					for (var i = 0; i < game.characters.length; i++) {
 						var apply = $("#" + game.characters[i]);
-						
+						// applies random hp from array
 						var hpl = game.hStat.length - 1;
 						var rh = (Math.round(Math.random() * hpl));
 						apply.attr("HP", game.hStat[rh]);
 						apply.append("<p class='displayhp'>" + "HP " + game.hStat[rh] + "</p>");
 						game.hStat.splice(rh,1);
 
-						
+						// applies random atk from array
 						var atkl = game.aStat.length - 1;						
 						var ra = (Math.round(Math.random() * atkl));
 						apply.attr("Atk", game.aStat[ra]);
 						apply.append("<p class='displayatk'>" + "ATK " + game.aStat[ra] + "</p>");
 						game.aStat.splice(ra,1);
 
-				
+						// applies random cntratk from array
 						var cntrAtkl = game.cStat.length - 1;						
 						var rc = (Math.round(Math.random() * cntrAtkl));
 						apply.attr("cntrAtk", game.cStat[rc]);
@@ -149,13 +160,14 @@ game = {
 						game.cStat.splice(rc,1);
 
 					}
-				
+					// sets player base attack value
+					game.baseAtk = parseInt($("[role=player]").attr("atk"));
 					game.cloneIn();
 				},
 // moves the selcted enemy to the combat zone and triggers locked
 	cloneIn: 	function() {
 					
-					$(".enemyParty").on("click", function() {
+					$("[role=enemies]").on("click", function() {
 						var opon = ($(this).attr("id"));
 						if (!game.locked) {
 							$("[role=defender]").attr("role", "defeated");
@@ -163,26 +175,26 @@ game = {
 							$(this).clone().appendTo("#combat");
 							$("#enemy").children('#' + opon).remove();
 							game.locked = true;
-							game.combat();
+							game.combat(game.baseAtk);
 						};
 
 					});
 				},
 // generates a attack button and performs the combat actions
-	combat: 	function() {
+	combat: 	function(baseAtk) {
 					var newBtn = $("<button>");
 					newBtn.text("Attack");
 					newBtn.addClass("attack");
 					$("#selection").append(newBtn);
-					var baseAtk = parseInt($("[role=player]").attr("atk"));
+					
 					var pBaseAtk = parseInt($("[role=player]").attr("atk"));
-					// pDamage.push();
+
 					var pHealth = parseInt($("[role=player]").attr("hp"));
-					// pHealth.push();
+
 					var eCounter = parseInt($("[role=defender]").attr("cntratk"));
-					// eDamage.push();
+		
 					var eHealth = parseInt($("[role=defender").attr("hp"));
-					// eHealth.push();
+
 					$(".attack").on("click", function() {
 						eHealth = eHealth - pBaseAtk;
 						$("[role=defender]").attr("hp", eHealth);
@@ -200,31 +212,44 @@ game = {
 				var dhStat = defender.attr("hp");
 				defender.children(".displayhp").text("HP " + dhStat);
 				var paStat = player.attr("atk");
-				player.children(".displyatk").text("ATK " + paStat);
+				player.children(".displayatk").text("ATK " + paStat);
 				var phStat = player.attr("hp");
 				player.children(".displayhp").text("HP " + phStat);
 				game.defeated(defender, phStat, dhStat);
 			},
 
 	defeated: 	function(defender, phStat, dhStat) {
+					// defender defeat condition
 					if (dhStat <= 0) {
+						defender.attr("role", "defeated");
 						defender.clone().appendTo("#graveyard");
-						// defender.attr("role", "defeated");
+						
 						$("#selection").children(".attack").remove();
 						$("#combat").empty();
+
 						game.locked = false;
 					};
-	}
-
-
-	//set conditions
-	// enemies are move to grave yard when killed and enemy selction unlocks
-	// win condition defeat all or lose
+					// lose condition
+					if (phStat <= 0) {
+						confirm("YOU LOSE!");
+						game.field.empty();
+						game.load();
+					};
+					// win condition
+					if ($("[role=defeated]").length == game.enemy.length) {
+						confirm("YOU WIN!");
+						game.field.empty();
+						game.load();
+					};
+				}
+	
 	// display images
+	// game text 
+	// css style
 }
 
 // event functions go here
 $(document).ready(function() {
-
+// initial load 
 	game.load();
 });
