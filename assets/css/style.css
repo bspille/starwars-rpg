@@ -1,9 +1,73 @@
-#mapArea {
 
+#mapArea {
+	background-image: url("../images/starwars.jpg");
+	height:1000px;
+	position: relative;
 }
 #startBtn {
-
+	margin: auto;
 }
 #selection {
+	width: 300px;
+	height: 300px;
+	background: rgba(100, 100, 100, .5);
+	display: inline-block;
+	position: absolute;
+	text-align: center;
+}
+#combat {
+	width: 300px;
+	height: 300px;
+	background: rgba(100, 100, 100, .5);
+	display: inline-block;
+	position: absolute;
+	left: 400px;
+}
+#enemy {
+	width: 400px;
+	height: 200px;
+	background: rgba(100, 100, 100, .5);
+	display: inline-block;
+	position: absolute;
+	left: 800px;
+}
+#graveyard {
+	width: 400px;
+	height: 200px;
+	background: rgba(100, 100, 100, .5);
+	display: inline-block;
+	position: absolute;
+	top: 300px;
+	left: 800px;
+}
+.avatar {
+	background: #999;
+	width: 120px;
+	text-align: center;
+	margin: auto;
+}
+#startBtn {
+	position:;
+	padding: 10px;
+	font-size: 30px;
+	margin: 50px 50px;
+}
+.attack {
+	padding: 10px;
+	font-size: 25px;
+}
+.intro {
+	width: 500px;
+	height: 500px;
+	background: rgba(100, 100, 100, .5);
+	font-size: 20px;
+	color: orange;
+	padding: 50px;
 
+}
+h2 {
+	font-size: 30px;
+}
+ol {
+	list-style-type: decimal;
 }

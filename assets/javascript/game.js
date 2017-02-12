@@ -9,20 +9,20 @@ game = {
 	characters: ["char_1", "char_2", "char_3", "char_4"],
 	enemy: [],
 
-	charaImage: [],
+	charaImage: ["image_1.jpg", "image_2.jpg", "image_3.jpg", "image_4.jpg"],
 
 	buttons: ["start", "attack"],
 
 	player: [],
 	baseAtk: [],
 
-	HP: ["100", "110", "120", "130"],
+	HP: ["110", "115", "120", "125"],
 	hStat: [],
 
-	atk: ["8", "9", "10", "12"],
+	atk: ["8", "9", "11", "12"],
 	aStat: [],
 
-	cntrAtk: ["7", "11", "14", "16"],
+	cntrAtk: ["10", "13", "14", "15"],
 	cStat: [],
 // sets the stage to begining values can be used to reload the game without reloading the page
 	load: 	function() {
@@ -39,6 +39,19 @@ game = {
 				var newBtn = $("<button>" + game.buttons[0] + "</button>");
 				newBtn.attr("id", "startBtn");
 				game.field.append(newBtn);
+
+				var newDiv = $("<div>");
+				newDiv.addClass("intro");
+				newDiv.html("<h2>Instructions</h2><ol>" + 
+							"<li>Click on the start button to start</li>" +
+							"<li>Click on a character to select player</li>" +
+							"<li>Choose the the enemies one at a time by clicking on them</li>" +
+							"<li>Once a enemy is moved to the defender zone click the attack button</li>" +
+							"<li>Continue to click attack until the defeder is defeated then select again</li>" +
+							"<li>To win you must defeat all the enemies</li>" +
+							"<li>Choose wisely and may the force be with you</li>" + "</ol>");
+				game.field.append(newDiv);
+
 				for (var i = 0; i < game.characters.length; i++) {
 					game.enemy.push(game.characters[i]);
 				};
@@ -66,7 +79,7 @@ game = {
 						var newImg = $("<img>");
 						newImg.attr("class", "chara");
 						newImg.attr("alt", game.characters[i]);
-						// newImg.attr("src", "asset/images/" + game.charaImage[i]);
+						newImg.attr("src", "assets/images/" + game.charaImage[i]);
 						newBtn.append(newImg);
 						newBtn.attr("class", "selBtn");
 						newBtn.val(game.characters[i]);
@@ -102,10 +115,9 @@ game = {
 	fieldplyr: 	function() {
 					var newDiv = $("<div>");
 					var newImg = $("<img>");
-					
+		
 					newImg.attr("alt", game.player);
-					newImg.attr("id", game.characters.indexOf(game.player));
-					
+					newImg.attr("src", "assets/images/" + game.charaImage[game.characters.indexOf(game.player)]);
 					newDiv.append(newImg);
 					newDiv.addClass("avatar")
 					newDiv.attr("role","player");
@@ -122,7 +134,7 @@ game = {
 						var newImg = $("<img>");
 
 						newImg.attr("alt", game.enemy[i]);
-						newImg.attr("id", "image_" + game.characters.indexOf(game.enemy[i]));
+						newImg.attr("src", "assets/images/" + game.charaImage[game.characters.indexOf(game.enemy[i])]);
 						
 						newBtn.append(newImg);
 						newBtn.attr("role", "enemies")
